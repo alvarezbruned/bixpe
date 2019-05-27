@@ -17,6 +17,6 @@ phpunit:
     - BOT_TOKEN_TELEGRAM=miBotTokenTelegram
     - CHAT_ID_TELEGRAM=miChatIdTelegram
     # - ACTION=start,stop,lunch,comeBackFromLunch
-    - ACTION=stop
+    - ACTION=start
   volumes:
     - ./bixpe.php:/src/bixpe.php

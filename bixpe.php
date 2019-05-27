@@ -111,22 +111,27 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase
     }
 
     public function tele($message) {
-        $botToken = getenv('BOT_TOKEN_TELEGRAM');
-        $website = "https://api.telegram.org/".$botToken."/sendMessage";
-        $chatId = getenv('CHAT_ID_TELEGRAM');
-        $params = [
-            'chat_id'=>$chatId,
-            'text'=>$message,
-        ];
-        $ch = curl_init($website);
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        error_log($result);
+	try {
+            $botToken = getenv('BOT_TOKEN_TELEGRAM');
+            $website = "https://api.telegram.org/".$botToken."/sendMessage";
+            $chatId = getenv('CHAT_ID_TELEGRAM');
+            $params = [
+                'chat_id'=>$chatId,
+                'text'=>$message,
+            ];
+            $ch = curl_init($website);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            error_log($result);
+	    } catch(Exception $e) {
+                error_log($e->getMessage());
+        }
+        
     }
 
     private function clicksAction()

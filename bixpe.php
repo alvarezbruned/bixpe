@@ -28,7 +28,7 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase
         $this->clickHecho = false;
         $this->actionType = ['start', 'stop', 'lunch', 'comeBackFromLunch'];
         $this->action = getenv('ACTION');
-        $this->action = (in_array($this->action, $this->actionType))? $this->action: 'start';
+        $this->action = (!$this->action)? 'start': ((in_array($this->action, $this->actionType))? $this->action: 'start');
     }
 
     public function testTitle()
@@ -100,7 +100,7 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase
 
         sleep(5);
         if ($this->_isInPage($cssToAction)) {
-            $this->tele('Está ' . $this->action . ' OK no hago nada');
+            $this->tele('Acción ' . $this->action . ' OK');
             sleep(5);
             return true;
         }
@@ -111,10 +111,16 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase
     }
 
     public function tele($message) {
-	try {
+        try {
             $botToken = getenv('BOT_TOKEN_TELEGRAM');
+            $botToken = (!$botToken)? '': $botToken;
             $website = "https://api.telegram.org/".$botToken."/sendMessage";
             $chatId = getenv('CHAT_ID_TELEGRAM');
+            $chatId = (!$chatId)? '': $chatId;
+            if (!$botToken || !$chatId) {
+                error_log('BOT_TOKEN_TELEGRAM y/o CHAT_ID_TELEGRAM no están seteados');
+                return;
+            }
             $params = [
                 'chat_id'=>$chatId,
                 'text'=>$message,
@@ -127,9 +133,13 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $result = curl_exec($ch);
             curl_close($ch);
+            $responseTelegram = json_decode($result);
+            if (!$responseTelegram->ok) {
+                error_log('BOT_TOKEN_TELEGRAM y/o CHAT_ID_TELEGRAM son incorrectos');
+            }
             error_log($result);
-	    } catch(Exception $e) {
-                error_log($e->getMessage());
+        } catch(Exception $e) {
+            error_log($e->getMessage());
         }
         
     }

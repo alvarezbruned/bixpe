@@ -22,7 +22,7 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase
     public function setUp()
     {
 	sleep(5);//wait selenium UP
-        $this->setHost('selenium');
+        $this->setHost((getenv('SELENIUM_HOST'))? getenv('SELENIUM_HOST'): 'selenium');
         $this->setPort(4444);
         $this->setBrowserUrl('https://auth2.bixpe.com/Account/Login');
         $this->setBrowser('firefox');

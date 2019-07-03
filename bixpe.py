@@ -59,12 +59,12 @@ driver.maximize_window()
 username = is_in_page('input#Username')
 if username:
     username.click()
-    username.send_keys(os.getenv('USER_NAME', 'miuser'))
+    username.send_keys(os.getenv('BIXPE_USER', 'miuser'))
 
 password = is_in_page('input#Password')
 if password:
     password.click()
-    password.send_keys(os.getenv('PASSWORD', 'mipass'))
+    password.send_keys(os.getenv('BIXPE_PASS', 'mipass'))
     password.send_keys(Keys.ENTER)
 
 time.sleep(5)

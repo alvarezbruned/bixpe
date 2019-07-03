@@ -70,7 +70,7 @@ class WebTest extends PHPUnit_Extensions_Selenium2TestCase
             $this->clicksAction();
             if (!$this->verifyAction()) {
                 $this->tele('No se ha hecho la acción ' . $this->action . ', has de darle tú');
-                sleep(240);
+                sleep(10);
             }
         }
 

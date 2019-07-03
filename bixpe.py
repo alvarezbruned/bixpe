@@ -3,6 +3,7 @@ import time
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+# from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 
 def is_in_page(selector):
@@ -39,6 +40,16 @@ def active_action(action):
 
 
 # driver = webdriver.Remote("firefox")
+# driver = webdriver.Remote(
+#           command_executor='http://localhost:4444/wd/hub',
+#           desired_capabilities=DesiredCapabilities.FIREFOX)
+# driver = webdriver.Remote(
+#             command_executor='http://127.0.0.1:4444/wd/hub',
+#             desired_capabilities={
+#                 'browserName': 'firefox',
+#                 'javascriptEnabled': True
+#             }
+#         )
 driver = webdriver.Firefox()
 
 driver.get("https://auth2.bixpe.com/Account/Login")

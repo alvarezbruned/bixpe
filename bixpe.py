@@ -108,9 +108,8 @@ if actualStatus == expectedStatus:
 else:
     active_action(expectedStatus)
     time.sleep(5)
-
-actual_status()
-if actualStatus == expectedStatus:
-    print(actualStatus + ' nada que hacer')
+    actual_status()
+    if actualStatus == expectedStatus:
+        print(actualStatus + ' nada que hacer')
 
 driver.close()

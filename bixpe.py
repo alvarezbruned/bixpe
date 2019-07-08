@@ -8,10 +8,8 @@ from selenium.webdriver.common.keys import Keys
 def is_in_page(selector):
     try:
         if "@" in selector:
-            element = driver.find_element_by_xpath(selector)
-        else:
-            element = driver.find_element_by_css_selector(selector)
-        return element
+            return driver.find_element_by_xpath(selector)
+        return driver.find_element_by_css_selector(selector)
     except Exception:
         print(selector + ' Not found')
         return False

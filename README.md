@@ -16,3 +16,11 @@ to stop the deploy just need execute:
 docker-compose -f bixpe.yml down -v
 ```
 
+
+
+## Or by docker
+Need execute first:
+xhost +local:docker
+to share your X
+executing docker-compose up -d (needs set credentials before)
+

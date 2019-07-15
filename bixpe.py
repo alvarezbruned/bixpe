@@ -72,7 +72,6 @@ def actual_status():
                     print('tenemos cambios en web')
 
 
-# driver = webdriver.Remote("firefox:4444")
 driver = webdriver.Firefox()
 
 driver.get("https://auth2.bixpe.com/Account/Login")

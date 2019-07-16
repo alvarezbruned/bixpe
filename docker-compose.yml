@@ -1,0 +1,17 @@
+version: '2'
+services:
+  firefox:
+    image: albertalvarezbruned/firefox:sel
+    ports:
+      - 4444:4444
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ./bixpe.py:/home/appuser/bixpe.py
+    environment:
+      - 'DISPLAY=:0'
+      - 'BIXPE_USER='
+      - 'BIXPE_PASS='
+      - 'BIXPE_STATUS=start'
+    hostname: firefox
+    network_mode: 'host'
+    entrypoint: python3 /home/appuser/bixpe.py

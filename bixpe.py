@@ -72,7 +72,7 @@ def actual_status():
                     print('tenemos cambios en web')
 
 
-driver = webdriver.Firefox()
+driver = webdriver.Firefox(executable_path=r"./geckodriver")
 
 driver.get("https://auth2.bixpe.com/Account/Login")
 

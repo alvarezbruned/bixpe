@@ -1,0 +1,2 @@
+#!/bin/bash
+BIXPE_STATUS=comeBackFromLunch python3 bixpe.py

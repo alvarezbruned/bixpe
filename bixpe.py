@@ -77,16 +77,16 @@ def actual_status():
 
 driver = webdriver.Firefox(executable_path=r"./geckodriver")
 
-driver.get("https://www.bixpe.com")
-user = 'bixpe-cookies'
-try:
-    cookies = pickle.load(open("./" + user + ".pkl", "rb"))
-    for cookie in cookies:
-        if 'expiry' in cookie:
-            del cookie['expiry']
-        driver.add_cookie(cookie)
-except Exception as e:
-    print('no hay cookies' + str(e))
+# driver.get("https://auth2.bixpe.com/Account/Login")
+# user = 'bixpe-cookies'
+# try:
+#     cookies = pickle.load(open("./" + user + ".pkl", "rb"))
+#     for cookie in cookies:
+#         # if 'expiry' in cookie:
+#         #     del cookie['expiry']
+#         driver.add_cookie(cookie)
+# except Exception as e:
+#     print('no hay cookies' + str(e))
 
 driver.get("https://auth2.bixpe.com/Account/Login")
 driver.maximize_window()

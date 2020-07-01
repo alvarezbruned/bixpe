@@ -1,6 +1,6 @@
 import os
 import time
-
+import pickle
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
@@ -74,10 +74,23 @@ def actual_status():
                     print('tenemos cambios en web')
 
 
+
+
+
 driver = webdriver.Firefox(executable_path=r"./geckodriver")
 
-driver.get("https://auth2.bixpe.com/Account/Login")
+# driver.get("https://auth2.bixpe.com/Account/Login")
+# user = 'bixpe-cookies'
+# try:
+#     cookies = pickle.load(open("./" + user + ".pkl", "rb"))
+#     for cookie in cookies:
+#         # if 'expiry' in cookie:
+#         #     del cookie['expiry']
+#         driver.add_cookie(cookie)
+# except Exception as e:
+#     print('no hay cookies' + str(e))
 
+driver.get("https://auth2.bixpe.com/Account/Login")
 driver.maximize_window()
 
 type_if_exist('input#Username', os.getenv('BIXPE_USER', 'miuser'))
@@ -98,4 +111,9 @@ else:
     if actualStatus == expectedStatus:
         print(actualStatus + ' nada que hacer')
 
+pickle.dump( driver.get_cookies(), open("./" + user + ".pkl","wb"))
+time.sleep(2)
+
 driver.close()
+driver.quit()
+

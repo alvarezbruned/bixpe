@@ -41,8 +41,10 @@ def active_action(action):
         'lunch' : lunch_button,
         'comeBackFromLunch' : come_back_from_lunch_button
     }
+    time.sleep(3)
     click_if_exist(switch.get(action, 'error'))
-    time.sleep(2)
+    click_if_exist(switch.get(action, 'error'))
+    time.sleep(3)
     click_if_exist(confirm_button)
 
 

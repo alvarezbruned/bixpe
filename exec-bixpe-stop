@@ -1,2 +1,0 @@
-#!/bin/bash
-BIXPE_STATUS=stop python3 bixpe.py

@@ -1,9 +1,8 @@
 import os
 import time
-import pickle
-from selenium import webdriver
+import logging
 from selenium.webdriver.common.keys import Keys
-
+from selenium import webdriver
 
 def is_in_page(selector):
     try:
@@ -17,6 +16,7 @@ def is_in_page(selector):
 
 def click_if_exist(path_locator):
     element = is_in_page(path_locator)
+
     if element:
         element.click()
         return element
@@ -29,91 +29,99 @@ def type_if_exist(path_locator, keys_to_send):
         element.send_keys(keys_to_send)
 
 
-def active_action(action):
-    start_button = 'button#btn-start-workday'
-    stop_button = 'button#btn-stop-workday'
-    lunch_button = 'button#btn-pause-lunch'
-    come_back_from_lunch_button = 'button#btn-resume-workday'
-    confirm_button = 'button.swal2-confirm.swal2-styled'
-    switch = {
-        'start' : start_button,
-        'stop' : stop_button,
-        'lunch' : lunch_button,
-        'comeBackFromLunch' : come_back_from_lunch_button
+def is_correct_status(status_option):
+    is_correct = False
+    status_mapping = {
+        'Start': True,
+        'Stop': True,
+        'Pause': True,
+        'Resume': True
     }
-    time.sleep(3)
-    click_if_exist(switch.get(action, 'error'))
-    click_if_exist(switch.get(action, 'error'))
-    time.sleep(3)
-    click_if_exist(confirm_button)
+    is_correct = status_mapping.get(status_option)
+    return is_correct
 
 
 def actual_status():
     global actualStatus
     startActive = '.sl-item:nth-child(1) i.fa.fa-play.fa-2x.text-success'
     stopActive = '.sl-item:nth-child(1) .fa.fa-stop.fa-2x.text-danger'
-    lunchActive = '.sl-item:nth-child(1) i.fa.fa-pause.fa-2x.text-warning'
-    comeBackFromLunchActive = '.sl-item:nth-child(1) i.fa.fa-refresh.fa-2x.text-success'
+    pauseActive = '.sl-item:nth-child(1) i.fa.fa-pause.fa-2x.text-warning'
+    resumeActive = '.sl-item:nth-child(1) i.fa.fa-refresh.fa-2x.text-success'
     actualStatus = 'no'
     if is_in_page(startActive):
-        actualStatus = 'start'
+        actualStatus = 'Start'
         print('status load ' + actualStatus)
     else:
         if is_in_page(stopActive):
-            actualStatus = 'stop'
+            actualStatus = 'Stop'
             print('status load ' + actualStatus)
         else:
-            if is_in_page(lunchActive):
-                actualStatus = 'lunch'
+            if is_in_page(pauseActive):
+                actualStatus = 'Pause'
                 print('status load ' + actualStatus)
             else:
-                if is_in_page(comeBackFromLunchActive):
-                    actualStatus = 'comBackFromLunch'
+                if is_in_page(resumeActive):
+                    actualStatus = 'Resume'
                     print('status load ' + actualStatus)
                 else:
                     print('tenemos cambios en web')
 
 
+def chrome_webdriver():
+    global driver
+    try:
+        driver = webdriver.Chrome(executable_path=r"/usr/lib/chromium-browser/chromedriver")
+    except Exception as e:
+        try:
+            print('version 75 failed, go to version 76')
+            driver = webdriver.Chrome(executable_path=r"./chromedriver76")
+        except Exception as e2:
+            try:
+                print('version 76 failed, go to version 77')
+                driver = webdriver.Chrome(executable_path=r"./chromedriver77")
+            except Exception as e3:
+                try:
+                    print('version 77 failed, go to version 83')
+                    driver = webdriver.Chrome(executable_path=r"./chromedriver83")
+                except Exception as e4:
+                    print('version 83 failed')
+    return driver
 
 
-
-driver = webdriver.Firefox(executable_path=r"./geckodriver")
-
-# driver.get("https://auth2.bixpe.com/Account/Login")
-# user = 'bixpe-cookies'
-# try:
-#     cookies = pickle.load(open("./" + user + ".pkl", "rb"))
-#     for cookie in cookies:
-#         # if 'expiry' in cookie:
-#         #     del cookie['expiry']
-#         driver.add_cookie(cookie)
-# except Exception as e:
-#     print('no hay cookies' + str(e))
+os.environ['DISPLAY'] = os.getenv('INS_DISPLAY', ':0.0')
+logging.basicConfig(level=logging.INFO)
+# driver = webdriver.Firefox(executable_path=r"./geckodriver")
+driver = chrome_webdriver()
 
 driver.get("https://auth2.bixpe.com/Account/Login")
+
 driver.maximize_window()
 
 type_if_exist('input#Username', os.getenv('BIXPE_USER', 'miuser'))
 type_if_exist('input#Password', os.getenv('BIXPE_PASS', 'mipass'))
 type_if_exist('input#Password', Keys.ENTER)
 
-time.sleep(8)
 
-expectedStatus = os.getenv('BIXPE_STATUS', 'stop')
+expectedStatus = os.getenv('BIXPE_STATUS', 'start').capitalize()
+
+actual_status()
+
+if actualStatus != expectedStatus:
+    if is_correct_status(expectedStatus):
+        time.sleep(8)
+        driver.get("https://worktime.bixpe.com/WorkDay/" + expectedStatus)
+        time.sleep(8)
+        driver.get("https://worktime.bixpe.com/")
+        time.sleep(8)
+    else:
+        print('status is not valid')
+
 actual_status()
 
 if actualStatus == expectedStatus:
-    print(actualStatus + ' nada que hacer')
-else:
-    active_action(expectedStatus)
-    time.sleep(5)
-    actual_status()
-    if actualStatus == expectedStatus:
-        print(actualStatus + ' nada que hacer')
+    print(actualStatus + ' it\'s actual status')
 
-pickle.dump( driver.get_cookies(), open("./" + user + ".pkl","wb"))
+
 time.sleep(2)
 
 driver.close()
-driver.quit()
-

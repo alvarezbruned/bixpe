@@ -73,18 +73,15 @@ def chrome_webdriver():
         driver = webdriver.Chrome(executable_path=r"/usr/lib/chromium-browser/chromedriver")
     except Exception as e:
         try:
-            print('version 75 failed, go to version 76')
             driver = webdriver.Chrome(executable_path=r"./chromedriver76")
         except Exception as e2:
             try:
-                print('version 76 failed, go to version 77')
                 driver = webdriver.Chrome(executable_path=r"./chromedriver77")
             except Exception as e3:
                 try:
-                    print('version 77 failed, go to version 83')
                     driver = webdriver.Chrome(executable_path=r"./chromedriver83")
                 except Exception as e4:
-                    print('version 83 failed')
+                    print('version chromedriver fails')
     return driver
 
 
